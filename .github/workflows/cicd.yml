@@ -2,7 +2,7 @@ name: Build & Deploy Static HTML to Render
 
 on:
   push:
-    branches: [main]
+    branches: [master]
 
 jobs:
   build-and-deploy:
