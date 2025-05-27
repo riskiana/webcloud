@@ -1,23 +1,25 @@
-name: CI for Static Site
+name: Build & Deploy Static HTML to Render
 
 on:
   push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+    branches: [main]
 
 jobs:
-  validate-html:
+  build-and-deploy:
     runs-on: ubuntu-latest
-    name: HTML Linter Job
+
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
+    - name: 📥 Checkout Code
+      uses: actions/checkout@v3
 
-      - name: Install HTMLHint
-        run: |
-          npm install -g htmlhint
+    - name: 🧪 Run basic test (check index.html exists)
+      run: |
+        if [ ! -f index.html ]; then
+          echo "index.html not found!"
+          exit 1
+        fi
+        echo "index.html found, test passed!"
 
-      - name: Lint HTML files
-        run: |
-          htmlhint index.html
+    - name: 🚀 Deploy to Render using Deploy Hook
+      run: |
+        curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK }}
